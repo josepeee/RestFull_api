@@ -1,15 +1,19 @@
 const express = require("express");
 const mongoose=require("mongoose")
+const mobilesRouter = require("./routers/mobilesRouters")
 const PORT = 3000;
+const app = express()
+app.use(express.json());
+
 require("dotenv").config();
 
 
-const app = express();
-app.get('/hola/:nombre', (req, res) => {
-    const nombre = req.params.nombre;
-    res.setHeader("Content-type", "text/html; chartset=utf-8");
-    res.end(`<h2> hola mundo ${nombre}</h2>`);
-})
+// const app = express();
+// app.get('/hola/:nombre', (req, res) => {
+//     const nombre = req.params.nombre;
+//     res.setHeader("Content-type", "text/html; chartset=utf-8");
+//     res.end(`<h2> hola mundo ${nombre}</h2>`);
+// })
 
 const urlMongoose = process.env.DATABASE_URL_DEV;
 
@@ -28,6 +32,9 @@ db.once("connected", () =>{
 db.on("disconected", () =>{
     console.log("mongoose default connection is disconnected")
 })
+
+app.use("/mobiles", mobilesRouter)
+
 
 app.listen(PORT, () => {
     console.log(`Server running in http://localhost:${PORT}`);

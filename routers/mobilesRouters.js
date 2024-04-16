@@ -7,14 +7,17 @@
 // });
 
 
-
 let mobiles= 
 [{ id:1, marca:"Apple", modelo: "Iphone14"},
   {id:2, marca:"Apple", modelo: "Iphone14"},
   {id:3, marca:"Samsung", modelo: "Galaxy s22"},
 ];
 
-
+// let compuerter = [
+//     {id:1, marca: "msi",modelo:"tiet"},
+//     {id:2, marca: "samsung",modelo:"mascota"},
+//     {id:3, marca: "hp",modelo:"empei"},
+// ];
 
 //Escuchar peticiones GET
 router.get('/',(req,res) => {
@@ -31,13 +34,24 @@ router.get('/:id', (req, res) => {
 
 //Añadir documentos
 router.post('/',(req,res) => {
-    res.send(`POST documents id `);
-})
+    const {marca, modelo} =req.body;
+    const index = mobiles.length +1;
+    mobiles.push({index,marca,modelo});
+    res.json(mobiles);
+});
 
 //Actualizar un documento
-router.patch('/:id',(req,res) => {
-    res.send(`PATCH documents id ${req.params.id}`);
-})
+router.patch("/:id",(req,res) => {
+    const mobileId = parseInt(req.params.id); 
+    const{marca, modelo} = req.body;
+    const index = mobiles.findIndex((mobile) => mobile.id ===mobileId);
+    if (index === -1) {
+        return res.json({error: "No se encuenbtra ese id"});
+    }
+    mobiles[index].marca = marca;
+    mobiles[index].modelo = modelo;
+    res.json(mobiles[index]);
+});
 
 //Borrar un documento
 router.delete('/:id',(req,res) => {

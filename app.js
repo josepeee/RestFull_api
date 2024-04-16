@@ -2,19 +2,10 @@ const express = require("express");
 const mongoose=require("mongoose")
 const mobilesRouter = require("./routers/mobilesRouters")
 const PORT = 3000;
-const app = express()
-app.use(express.json());
-
 require("dotenv").config();
 
-
-// const app = express();
-// app.get('/hola/:nombre', (req, res) => {
-//     const nombre = req.params.nombre;
-//     res.setHeader("Content-type", "text/html; chartset=utf-8");
-//     res.end(`<h2> hola mundo ${nombre}</h2>`);
-// })
-
+const app = express()
+app.use(express.json());
 const urlMongoose = process.env.DATABASE_URL_DEV;
 
 mongoose.connect(urlMongoose);
@@ -42,3 +33,11 @@ app.listen(PORT, () => {
 });
 
 // constraseña: 5wswpTUkuTQB3kZH
+
+
+// const app = express();
+// app.get('/hola/:nombre', (req, res) => {
+//     const nombre = req.params.nombre;
+//     res.setHeader("Content-type", "text/html; chartset=utf-8");
+//     res.end(`<h2> hola mundo ${nombre}</h2>`);
+// })

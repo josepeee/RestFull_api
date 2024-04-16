@@ -7,12 +7,11 @@
 // });
 
 
-module.exports = router;
 
 let mobiles= 
-[{ id:1,marca:"Appel", modelo: "Iphone14"},
-  {id:2, marca:"Appel", modelo: "Iphone14"},
-  {id:3, marca:"Samsung", modelo: "Galaxy s22"} 
+[{ id:1, marca:"Apple", modelo: "Iphone14"},
+  {id:2, marca:"Apple", modelo: "Iphone14"},
+  {id:3, marca:"Samsung", modelo: "Galaxy s22"},
 ];
 
 
@@ -22,8 +21,9 @@ router.get('/',(req,res) => {
     res.json(mobiles);
 });
 
+
 //Obtener documentos por ID
-router.get('/:id', (req,res) => {
+router.get('/:id', (req, res) => {
     const mobileId =parseInt(req.params.id);
     const mobile = mobiles.find((mobiles) => mobiles.id === mobileId);
     res.json(mobile)
@@ -41,6 +41,7 @@ router.patch('/:id',(req,res) => {
 
 //Borrar un documento
 router.delete('/:id',(req,res) => {
+    
 const mobileId = parseInt(req.params.id);
 const index = mobiles.findIndex((mobile) => mobile.id === mobileId);
 console.log(index);
@@ -52,3 +53,5 @@ mobiles.splice(index, 1);
 return res.json(mobiles);
     res.send(`DELETE documents id ${req.params.id}`);
 })
+
+module.exports = router;

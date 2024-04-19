@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+</head>
+
+<body>
+    <h2>Login</h2>
+    <form id="loginForm">
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+        </div>
+        <div>
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit">Iniciar sesión</button>
+    </form>
+
+    <div id="mobileList">
+        <!-- Aquí se mostrarán los móviles después de iniciar sesión -->
+    </div>
+
+    <button id="refreshButton">Actualizar Lista</button>
+
+    <script>
+        document
+            .getElementById("loginForm")
+            .addEventListener("submit", async function (event) {
+                event.preventDefault();
+
+                const formData = new FormData(this);
+                const email = formData.get("email");
+                const password = formData.get("password");
+
+                try {
+                    const response = await fetch("http://localhost:3000/user/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ email, password }),
+                    });
+
+                    const data = await response.json();
+                    // Guardar el token en localStorage
+                    if (data) {
+                        localStorage.setItem("token", data.token);
+                        localStorage.setItem("token_refresh", data.token_refresh);
+                    }
+
+                    // Llamar a la función para obtener todos los móviles después de iniciar sesión
+                    await fetchMobiles();
+                } catch (error) {
+                    console.error("Error:", error);
+                    // Maneja el error según lo necesites
+                }
+            });
+
+        async function fetchMobiles() {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    throw new Error("Token not found");
+                }
+
+                const response = await fetch("http://localhost:3000/mobiles", {
+                    headers: {
+                        "auth-token": token,
+                    },
+                });
+
+                if (response.status === 400) {
+                    // Token ha caducado, llamar a refreshToken si no se ha ejecutado ya
+
+                    await refreshToken();
+                } else {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log(data); // Maneja la lista de móviles según lo necesites
+
+                // Mostrar los móviles en el DOM
+                const mobiles = data.data;
+
+                // Mostrar los móviles en el DOM
+                const mobileListDiv = document.getElementById("mobileList");
+                mobileListDiv.innerHTML = ""; // Limpiar el contenido existente
+                mobiles.forEach((mobile) => {
+                    const mobileElement = document.createElement("div");
+                    mobileElement.textContent = `${mobile.marca} - ${mobile.modelo}`;
+                    mobileListDiv.appendChild(mobileElement);
+                });
+            } catch (error) {
+                console.error("Error fetching mobiles:", error);
+                // Maneja el error según lo necesites
+            }
+        }
+
+        // Función para manejar el refresco del token
+        async function refreshToken() {
+            try {
+                const token_refresh = localStorage.getItem("token_refresh");
+                console.log(token_refresh);
+                const response = await fetch(
+                    "http://localhost:3000/user/refreshToken",
+                    {
+                        method: "POST",
+                        headers: {
+                            "auth-token": token_refresh,
+                        },
+                    }
+                );
+
+                const newData = await response.json();
+                console.log(newData); // Maneja la respuesta del refresco del token según lo necesites
+
+                // Actualizar el token en localStorage
+                if (newData) {
+                    localStorage.setItem("token", newData.token);
+                    localStorage.setItem("token_refresh", newData.token_refresh);
+                }
+
+                // Vuelve a intentar obtener la lista de móviles con el nuevo token
+                await fetchMobiles();
+            } catch (error) {
+                console.error("Error refreshing token:", error);
+                // Maneja el error según lo necesites
+            }
+        }
+
+        // Llama a refreshToken al cargar la página para asegurarse de que el token esté actualizado
+        window.onload = async () => {
+            await refreshToken();
+        };
+
+        // Manejar el clic en el botón de actualización
+        document
+            .getElementById("refreshButton")
+            .addEventListener("click", async () => {
+                await fetchMobiles(); // Llamar a la función para obtener la lista de móviles
+            });
+    </script>
+</body>
+
+</html>

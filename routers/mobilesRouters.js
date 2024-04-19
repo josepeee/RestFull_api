@@ -10,10 +10,11 @@
    removeColor,
    getAverage, // obtener media..
  } = require("../controllers/mobilesController");
+const veryfytoken = require("../middlewares/auth");
  
  //El orden de las peticiones deben de ser de las mas complejas a las mas faciles las ultimas las de id; 
  //Escuchar peticiones GET
- router.get("/", getAllMobiles);
+ router.get("/", getAllMobiles , veryfytoken);
 
 // Obtener media 
 router.get("/average", getAverage)

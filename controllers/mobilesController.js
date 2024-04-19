@@ -14,13 +14,13 @@ const createMobile = (req, res) => {
     try {
         // Extraer datos del cuerpo de la solicitud
         const { marca, modelo, precio, colores } = req.body;
-        
+
         // Crear un nuevo objeto Mobile con los datos recibidos
         const mobile = new Mobile({ marca, modelo, precio, colores });
-        
+
         // Guardar el objeto móvil en la base de datos
         mobile.save();
-        
+
         // Enviar respuesta con estado 200 y el objeto móvil creado
         res.status(200).json({
             status: "success",
@@ -35,9 +35,9 @@ const createMobile = (req, res) => {
         });
     }
 };
-   //obtener la media.. Colocar siempre por delante del id en el orden de las peticiones para que no de error..
+//obtener la media.. Colocar siempre por delante del id en el orden de las peticiones para que no de error..
 const getAverage = (req, res) => {
-    res.json({media: 29});
+    res.json({ media: 29 });
 }
 
 // Función asincrónica para obtener todos los móviles
@@ -45,10 +45,10 @@ const getAllMobiles = async (req, res) => {
     try {
         // Buscar todos los móviles en la base de datos
         const mobiles = await Mobile.find();
-        
+
         // Imprimir en la consola los móviles encontrados (opcional)
         console.log(mobiles);
-        
+
         // Verificar si no se encontraron móviles
         if (mobiles.length === 0) {
             // Enviar una respuesta con estado 200 indicando que no hay datos
@@ -77,22 +77,22 @@ const getMobileById = async (req, res) => {
     try {
         // Obtener el ID del móvil de los parámetros de la solicitud
         const mobileId = req.params.id;
-        
+
         // Buscar el móvil en la base de datos por su ID
         const mobile = await Mobile.findById(mobileId);
-        
+
         // Verificar si no se encontró ningún móvil con el ID proporcionado
-        if (!mobile) { 
+        if (!mobile) {
             // Enviar una respuesta con estado 200 indicando que no se encontró ningún móvil
             return res.status(200).json({
                 status: "success",
                 message: "No hay móvil",
             });
         }
-        
+
         // Imprimir en la consola el móvil encontrado (opcional)
         console.log(mobile);
-        
+
         // Verificar si el móvil encontrado es un array vacío
         if (mobile.length === 0) {
             // Enviar una respuesta con estado 200 indicando que no hay datos
@@ -101,7 +101,7 @@ const getMobileById = async (req, res) => {
                 message: "No hay datos",
             });
         }
-        
+
         // Enviar una respuesta con estado 200 y el móvil encontrado
         res.status(200).json({
             status: "success",
@@ -122,10 +122,10 @@ const patchMobile = async (req, res) => {
     try {
         // Obtener el ID del móvil de los parámetros de la solicitud
         const mobileId = req.params.id;
-        
+
         // Extraer los datos de marca, modelo, precio y colores del cuerpo de la solicitud
         const { marca, modelo, precio, colores } = req.body;
-        
+
         // Buscar el móvil en la base de datos por su ID
         const mobile = await Mobile.findById(mobileId);
 
@@ -142,7 +142,7 @@ const patchMobile = async (req, res) => {
         if (colores) {
             mobile.colores = colores;
         }
-        
+
         // Guardar los cambios realizados en el móvil
         mobile.save();
 
@@ -166,10 +166,10 @@ const deleteMobile = async (req, res) => {
     try {
         // Obtener el ID del móvil de los parámetros de la solicitud
         const mobileId = req.params.id;
-        
+
         // Buscar el móvil en la base de datos por su ID y eliminarlo
         const mobile = await Mobile.findByIdAndDelete(mobileId);
-        
+
         // Verificar si no se encontró ningún móvil con el ID proporcionado
         if (!mobile) {
             // Enviar una respuesta con estado 200 indicando que no se encontró ningún móvil para eliminar
@@ -178,7 +178,7 @@ const deleteMobile = async (req, res) => {
                 message: "No se ha encontrado ningún móvil para eliminar",
             });
         }
-        
+
         // Enviar una respuesta con estado 200 y los datos del móvil eliminado
         res.status(200).json({
             status: "success",
@@ -201,10 +201,10 @@ const patch2Mobile = async (req, res) => {
     try {
         // Obtener el ID del móvil de los parámetros de la solicitud
         const mobileId = req.params.id;
-        
+
         // Extraer los datos de marca, modelo, precio y colores del cuerpo de la solicitud
         const { marca, modelo, precio, colores } = req.body;
-        
+
         // Utilizar Mobile.findByIdAndUpdate para buscar y actualizar el móvil por su ID
         const mobile = await Mobile.findByIdAndUpdate(
             mobileId, // ID del móvil a actualizar
@@ -218,7 +218,7 @@ const patch2Mobile = async (req, res) => {
             },
             { new: true } // Opción new: true para devolver el móvil actualizado en lugar del original
         );
-        
+
         // Enviar una respuesta con estado 200 y los datos del móvil actualizado
         res.status(200).json({
             status: "success",
@@ -233,13 +233,13 @@ const patch2Mobile = async (req, res) => {
         });
     }
 
-// En esta función, patch2Mobile, se utiliza Mobile.findByIdAndUpdate para buscar y actualizar un móvil por su ID. La diferencia principal entre patch y update radica en cómo se realiza la actualización:
+    // En esta función, patch2Mobile, se utiliza Mobile.findByIdAndUpdate para buscar y actualizar un móvil por su ID. La diferencia principal entre patch y update radica en cómo se realiza la actualización:
 
-// patch suele usarse para actualizar parcialmente un recurso, es decir, actualizar solo los campos proporcionados en la solicitud. En este caso, se utiliza el operador $set para especificar qué campos se deben actualizar y sus nuevos valores. Esto permite modificar solo los campos que se proporcionan en la solicitud y mantener los demás sin cambios.
+    // patch suele usarse para actualizar parcialmente un recurso, es decir, actualizar solo los campos proporcionados en la solicitud. En este caso, se utiliza el operador $set para especificar qué campos se deben actualizar y sus nuevos valores. Esto permite modificar solo los campos que se proporcionan en la solicitud y mantener los demás sin cambios.
 
-// update, por otro lado, actualiza el documento completo con los valores proporcionados. Si solo se proporcionan ciertos campos, los demás se establecerán en null o se eliminarán según corresponda. Esto significa que si no se proporciona un campo, se eliminará del documento.
+    // update, por otro lado, actualiza el documento completo con los valores proporcionados. Si solo se proporcionan ciertos campos, los demás se establecerán en null o se eliminarán según corresponda. Esto significa que si no se proporciona un campo, se eliminará del documento.
 
-// En resumen, patch es más adecuado cuando se desea actualizar parcialmente un documento, mientras que update se utiliza cuando se desea reemplazar completamente el documento con nuevos valores. La elección entre ellos depende de los requisitos específicos de la aplicación y del tipo de actualización que se esté realizando.
+    // En resumen, patch es más adecuado cuando se desea actualizar parcialmente un documento, mientras que update se utiliza cuando se desea reemplazar completamente el documento con nuevos valores. La elección entre ellos depende de los requisitos específicos de la aplicación y del tipo de actualización que se esté realizando.
 
 };
 
@@ -249,10 +249,10 @@ const removeColor = async (req, res) => {
         // Obtener el ID del móvil y el color a eliminar del cuerpo de la solicitud
         const mobileId = req.body.id;
         const colorToRemove = req.body.color;
-        
+
         // Buscar el móvil en la base de datos por su ID
         const mobile = await Mobile.findById(mobileId);
-        
+
         // Verificar si no se encontró ningún móvil con el ID proporcionado
         if (!mobile) {
             // Enviar una respuesta con estado 200 indicando que no se encontró el móvil
@@ -261,10 +261,10 @@ const removeColor = async (req, res) => {
                 message: "Producto no encontrado",
             });
         }
-        
+
         // Filtrar la lista de colores del móvil para eliminar el color especificado
         mobile.colores = mobile.colores.filter((color) => color !== colorToRemove);
-        
+
         // Guardar los cambios realizados en el móvil
         const newMobile = await mobile.save();
 
@@ -284,6 +284,8 @@ const removeColor = async (req, res) => {
     }
 };
 
+
+
 module.exports = {
     getAllMobiles,
     getMobileById,
@@ -292,5 +294,5 @@ module.exports = {
     deleteMobile,
     patch2Mobile,
     removeColor,
-    getAverage
+    getAverage,
 };

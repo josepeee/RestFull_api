@@ -1,6 +1,7 @@
 const express = require("express");
-const mongoose=require("mongoose")
+const mongoose= require("mongoose")
 const mobilesRouter = require("./routers/mobilesRouters")
+const userRouter = require ("./routers/userRouter");
 const PORT = 3000;
 require("dotenv").config();
 
@@ -25,6 +26,7 @@ db.on("disconected", () =>{
 })
 
 app.use("/mobiles", mobilesRouter)
+app.use("/user", userRouter);
 
 
 app.listen(PORT, () => {

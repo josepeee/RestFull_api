@@ -1,6 +1,8 @@
 
 const Mobile = require("../models/mobilesModel");
 
+//se puede borrar..........
+
 let mobiles = [
     { id: 1, marca: "Apple", modelo: "Iphone 14" },
     { id: 2, marca: "Apple", modelo: "Iphone 13" },

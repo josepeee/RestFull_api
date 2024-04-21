@@ -109,8 +109,8 @@ const refreshToken = (req, res) => {
       name: payload.name,
       email: payload.email,
     }
-    const token = generarteToken(payload, false);
-    const token_refresh = generarteToken(payload, true);
+    const token = generarteToken(payload, false); //payload por user
+    const token_refresh = generarteToken(payload, true); //aqui tambien payload por user
 
     res.status(200).json({
       status: "succeeded",

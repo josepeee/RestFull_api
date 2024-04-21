@@ -8,23 +8,21 @@ const verifyToken = (req, res, next) => {
     const token = req.header("auth-token");
 
     // Si no hay token, devuelve un error de acceso denegado
-    if (!token) return res.status(401).send("Access Denied");
-
+    if (!token) return res.status(400).send("Access Denied");
     try {
         // Verifica el token utilizando la clave secreta del token de autenticación
-        const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+        const verified = jwt.verify(token, process.env.TOKEN_SECRET); // .......esta constante es payload
 
         // Si el token es válido, agrega el usuario verificado al objeto de solicitud y pasa al siguiente middleware
-        req.user = verified;
+        req.user = verified; // ..............req.payload = payload;
         next();
-
     } catch (error) {
         try {
             // Si la verificación del token de autenticación falla, intenta verificar con la clave secreta del token de actualización
-            const verified = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+            const verified = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);// .....payload
 
             // Si el token de actualización es válido, agrega el usuario verificado al objeto de solicitud y pasa al siguiente middleware
-            req.user = verified;
+            req.user = verified;//...............rep.payload = payload
             next();
 
         } catch (error) {

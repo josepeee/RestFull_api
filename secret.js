@@ -7,3 +7,6 @@ const hash = crypto.createHmac("sha256", secret)
 .digest("hex");
 
 console.log(hash);
+
+
+///Esto es para crear el hasgt

@@ -4,6 +4,7 @@ const User = require("../models/userModels");
 const bcrypt = require("bcrypt");
 const { generarteToken } = require("../utils/util");
 const jwt = require("jsonwebtoken");
+const { use } = require("../routers/mobilesRouters");
 
 const addUser = async (req, res) => {
   try {
@@ -53,6 +54,7 @@ const login = async (req, res) => {
           userId: user._id,
           nombre: user.name,
           email: user.email,
+          role: user.role,
         };
         const token = generarteToken(payload, false);
         const token_refresh = generarteToken(payload, true);
@@ -108,9 +110,10 @@ const refreshToken = (req, res) => {
       userId: payload.userId,
       name: payload.name,
       email: payload.email,
+      role: payload.role
     }
-    const token = generarteToken(payload, false); //payload por user
-    const token_refresh = generarteToken(payload, true); //aqui tambien payload por user
+    const token = generarteToken(user, false); //payload por user
+    const token_refresh = generarteToken(user, true); //aqui tambien payload por user
 
     res.status(200).json({
       status: "succeeded",

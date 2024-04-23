@@ -1,6 +1,6 @@
 // Importación de los módulos necesarios
 const express = require("express");
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); //importacion de la libreria mongoose
 const mobilesRouter = require("./routers/mobilesRouters"); // Importar el enrutador de móviles
 const userRouter = require("./routers/userRouter"); // Importar el enrutador de usuarios
 const PORT = 3000; // Puerto en el que se ejecutará el servidor
@@ -52,3 +52,4 @@ app.listen(PORT, () => {
 //     res.setHeader("Content-type", "text/html; chartset=utf-8");
 //     res.end(`<h2> hola mundo ${nombre}</h2>`);
 // })
+

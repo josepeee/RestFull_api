@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const verifyToken = (req, res, next) => {
 
     // Obtiene el token del encabezado de autorización
-    const token = req.header("auth-token");
+
 
     // Si no hay token, devuelve un error de acceso denegado
     if (!token) return res.status(400).send("Access Denied");
@@ -31,17 +31,30 @@ const verifyToken = (req, res, next) => {
         }
     }
 }
-
-const veryfyRol = (req, res, next)=>{
-    try{
-         const role = req.payload.role;
-         if(role !== "admin"){
-            return res.status(400).send("Acces denied: need admin permission"); 
-         }
-         next(); 
-    }catch (error){
-     return res.status(400).send("cannot read admin"); 
+const verifyRole = (req, res, next) => {
+    const token = req.header("auth-token");
+    if (!token) return res.status(401).send("Access denied");
+    try {
+      const payload = jwt.verify(token, process.env.TOKEN_SECRET);
+      if (!payload.role || payload.role === "user")
+        return res.status(400).send("Acceso denegado");
+      req.payload = payload;
+      next();
+    } catch (error) {
+      res.status(400).send("Expired token");
     }
-    };
+  };
+  
+  const verifyRole2 = (req, res, next) => {
+    try {
+      const payload = req.payload;
+      if (!payload.role || payload.role === "user")
+        return res.status(400).send("Acceso denegado");
+      req.payload = payload;
+      next();
+    } catch (error) {
+      res.status(400).send("Expired token");
+    }
+  };
 
-module.exports = verifyToken, veryfyRol ;
+module.exports = verifyToken;

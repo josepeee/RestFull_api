@@ -1,6 +1,6 @@
 
 const Mobile = require("../models/mobilesModel");
-
+ const sendEmail = require("../services/emailService");
 //se puede borrar..........
 
 let mobiles = [
@@ -22,7 +22,7 @@ const createMobile = (req, res) => {
         mobile.save();
 
         // Enviar respuesta con estado 200 y el objeto móvil creado
-        res.status(200).json({
+        res.status(201).json({
             status: "success",
             data: mobile,
         });
@@ -57,6 +57,14 @@ const getAllMobiles = async (req, res) => {
                 message: "No hay Moviles",
             });
         }
+        //LLamo a la funcion senMail......
+        await sendEmail(
+            "ivanmoreno",
+             "soy un email",
+             "<h2>soy el precio mas bajo</h2>"
+          
+        );
+
         // Enviar una respuesta con estado 200 y los móviles encontrados
         res.status(200.).json({
             status: " success",
@@ -283,6 +291,42 @@ const removeColor = async (req, res) => {
         });
     }
 };
+///// Prueba...     
+
+const sendCheapest= async (req ,res) => {
+
+    try{
+      const email = req.body.email;
+      const mobile = await Mobile.findOne().sort({ precio: 1});
+      if(!mobile){
+        return res.status(200).json({
+            status: "succes",
+            data: mobile,
+        })
+      }
+      const html =` <h2>hola pablo</h2>
+      <p> este es el producto </p>
+      <p>Marca: ${mobile.marca} </p><br>
+      <p>Modelo: ${mobile.modelo} </p><br>
+      <p>Precio: ${mobile.price} </p><br>
+
+      `  
+
+
+
+    } catch (error) {
+        // Manejar errores si la operación falla
+        res.status(400).json({
+            status: "Error",
+            message: "Error al borrar el móvil",
+            error: error.message,
+        });
+    }
+
+};
+
+
+
 
 
 
@@ -295,4 +339,5 @@ module.exports = {
     patch2Mobile,
     removeColor,
     getAverage,
+   
 };

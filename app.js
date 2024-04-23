@@ -4,6 +4,8 @@ const mongoose = require("mongoose"); //importacion de la libreria mongoose
 const mobilesRouter = require("./routers/mobilesRouters"); // Importar el enrutador de móviles
 const userRouter = require("./routers/userRouter"); // Importar el enrutador de usuarios
 const PORT = 3000; // Puerto en el que se ejecutará el servidor
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger/swagger");
 require("dotenv").config(); // Cargar variables de entorno desde un archivo .env
 
 // Creación de la aplicación Express
@@ -36,6 +38,7 @@ db.on("disconected", () => {
 // Rutas para los recursos de móviles y usuarios
 app.use("/mobiles", mobilesRouter); // Rutas relacionadas con los móviles
 app.use("/user", userRouter); // Rutas relacionadas con los usuarios
+app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Iniciar el servidor y escuchar en el puerto especificado
 app.listen(PORT, () => {

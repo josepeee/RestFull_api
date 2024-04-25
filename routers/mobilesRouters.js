@@ -12,6 +12,7 @@ const {
   sendCheapest, // obtener media..
 } = require("../controllers/mobilesController");
 const veryfytoken = require("../middlewares/auth");
+const { readFile } = require("fs/promises");
 
 /**
  * @swagger
@@ -113,7 +114,7 @@ router.patch("/:patch/: id", patch2Mobile);
 
 //Actualizar un color
 router.patch("/removeColor/:id", removeColor);
-router.get("/",sendCheapest)
+
 
 //Borrar un documento
 router.delete("/:id", deleteMobile);

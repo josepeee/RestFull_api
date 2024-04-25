@@ -8,7 +8,8 @@ const {
   deleteMobile,  // Borrar documentos
   patch2Mobile,
   removeColor,
-  getAverage, // obtener media..
+  getAverage,
+  sendCheapest, // obtener media..
 } = require("../controllers/mobilesController");
 const veryfytoken = require("../middlewares/auth");
 
@@ -112,6 +113,7 @@ router.patch("/:patch/: id", patch2Mobile);
 
 //Actualizar un color
 router.patch("/removeColor/:id", removeColor);
+router.get("/",sendCheapest)
 
 //Borrar un documento
 router.delete("/:id", deleteMobile);

@@ -59,10 +59,9 @@ const getAllMobiles = async (req, res) => {
         }
         //LLamo a la funcion senMail......
         await sendEmail(
-            "ivanmoreno",
-             "soy un email",
-             "<h2>soy el precio mas bajo</h2>"
-          
+            "joseantonioplaza7@gmail.com",
+            "soy un email",
+            "soy un ejemplo de email"
         );
 
         // Enviar una respuesta con estado 200 y los móviles encontrados
@@ -294,26 +293,32 @@ const removeColor = async (req, res) => {
 ///// Prueba...     
 
 const sendCheapest= async (req ,res) => {
-
     try{
       const email = req.body.email;
       const mobile = await Mobile.findOne().sort({ precio: 1});
       if(!mobile){
         return res.status(200).json({
             status: "succes",
-            data: mobile,
-        })
+            message: "No hay movil",
+        });
       }
-      const html =` <h2>hola pablo</h2>
-      <p> este es el producto </p>
-      <p>Marca: ${mobile.marca} </p><br>
-      <p>Modelo: ${mobile.modelo} </p><br>
-      <p>Precio: ${mobile.price} </p><br>
+        const html = `
+        <h2> ¡Oferta especial</h2><br>
+        <p>Este es el producto mas barato para ti:</p><br>
+        <p>Este es el producto mas barato para ti:</p><br>
+        <p>Marca:${mobile.marca}</p><br>
+        <p>Modelo:${mobile.modelo}</p><br>
+        <p>Precio:${mobile.price}</p><br>
+        `;
 
-      `  
+      //LLamo a la funcion senMail......
 
+      await sendEmail(email, "OFERTA!", html);
 
-
+      res.status(200).json({
+        status: "success",
+        data: mobile,
+      });
     } catch (error) {
         // Manejar errores si la operación falla
         res.status(400).json({
@@ -339,5 +344,6 @@ module.exports = {
     patch2Mobile,
     removeColor,
     getAverage,
+    sendCheapest
    
 };

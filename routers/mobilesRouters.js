@@ -19,7 +19,7 @@ const { readFile } = require("fs/promises");
  *  /mobiles:
  *    get:
  *        summary: Obtiene todos los moviles
- *        description: Obtiene la collection completa de moviles
+ *        description: Obtiene la collection completa de moviles  
  *        responses:
  *          200:
  *            description: Obtiene los moviles correctametne

@@ -1,6 +1,6 @@
 
 const Mobile = require("../models/mobilesModel");
- const sendEmail = require("../services/emailService");
+const sendEmail = require("../services/emailService");
 //se puede borrar..........
 
 let mobiles = [
@@ -292,16 +292,16 @@ const removeColor = async (req, res) => {
 };
 ///// Prueba...     
 
-const sendCheapest= async (req ,res) => {
-    try{
-      const email = req.body.email;
-      const mobile = await Mobile.findOne().sort({ precio: 1});
-      if(!mobile){
-        return res.status(200).json({
-            status: "succes",
-            message: "No hay movil",
-        });
-      }
+const sendCheapest = async (req, res) => {
+    try {
+        const email = req.body.email;
+        const mobile = await Mobile.findOne().sort({ precio: 1 });
+        if (!mobile) {
+            return res.status(200).json({
+                status: "succes",
+                message: "No hay movil",
+            });
+        }
         const html = `
         <h2> ¡Oferta especial</h2><br>
         <p>Este es el producto mas barato para ti:</p><br>
@@ -311,14 +311,14 @@ const sendCheapest= async (req ,res) => {
         <p>Precio:${mobile.price}</p><br>
         `;
 
-      //LLamo a la funcion senMail......
+        //LLamo a la funcion senMail......
 
-      await sendEmail(email, "OFERTA!", html);
+        await sendEmail(email, "OFERTA!", html);
 
-      res.status(200).json({
-        status: "success",
-        data: mobile,
-      });
+        res.status(200).json({
+            status: "success",
+            data: mobile,
+        });
     } catch (error) {
         // Manejar errores si la operación falla
         res.status(400).json({
@@ -345,5 +345,5 @@ module.exports = {
     removeColor,
     getAverage,
     sendCheapest
-   
+
 };

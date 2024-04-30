@@ -9,7 +9,9 @@ const {
   patch2Mobile,
   removeColor,
   getAverage,
-  sendCheapest, // obtener media..
+  sendCheapest,
+  obtenerTareasDeUsuario,
+  listaDeColoresDeUsuario, // obtener media..
 } = require("../controllers/mobilesController");
 const veryfytoken = require("../middlewares/auth");
 const { readFile } = require("fs/promises");
@@ -33,7 +35,7 @@ const { readFile } = require("fs/promises");
 
 //El orden de las peticiones deben de ser de las mas complejas a las mas faciles las ultimas las de id; 
 //Escuchar peticiones GET
-router.get("/", getAllMobiles, veryfytoken);
+router.get("/", listaDeColoresDeUsuario );
 
 /**
  * @swagger

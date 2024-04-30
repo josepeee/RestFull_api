@@ -56,21 +56,21 @@ const login = async (req, res) => {
           email: user.email,
           role: user.role,
         };
-        const token = generarteToken(payload, false);
-        const token_refresh = generarteToken(payload, true);
-        // process.env.token_secret, 
-        // { expiresIn: "1min"}
+        // const token = generarteToken(payload, false);
+        // const token_refresh = generarteToken(payload, true);
+        process.env.token_secret,
+          { expiresIn: "1min" }
 
 
-        /// token de regresco  es igual que el de arriba pero cambia el tiempo de expireIn......
-        // const token_refresh= jwt.sign(    {
-        //   userId: user._id,
-        //   nombre: user.name,
-        //   email: user.email,
+        // / token de regresco  es igual que el de arriba pero cambia el tiempo de expireIn......
+        const token_refresh = jwt.sign({
+          userId: user._id,
+          nombre: user.name,
+          email: user.email,
 
-        // },
-        // process.env.token_refresh,
-        // {expiresIn: "5min" })
+        },
+          process.env.token_refresh,
+          { expiresIn: "5min" })
 
         return res.status(200).json({
           status: "succeeded",

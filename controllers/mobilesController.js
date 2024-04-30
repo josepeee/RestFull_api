@@ -1,6 +1,9 @@
 
+const { buffer } = require("stream/consumers");
 const Mobile = require("../models/mobilesModel");
 const sendEmail = require("../services/emailService");
+const PDFDocument = require("pdfkit");
+const { default: test } = require("node:test");
 //se puede borrar..........
 
 let mobiles = [
@@ -330,8 +333,85 @@ const sendCheapest = async (req, res) => {
 
 };
 
+const obtenerTareasDeUsuario = async (req, res) => {
+    try {
+        const mobile = await Mobile.find();
+        if (mobile.length === 0) {
+            res.status(204).json({ status: "success", message: "No hay tareas" })
+        }
+        const doc = new PDFDocument();
+        const buffers = [];
+        doc.on("data", (chunk) => buffers.push(chunk));
+        doc.fontSize(18).text("Listado de tareas", { align: "center " });
+        doc.moveDown();
+
+        mobile.forEach(tarea => {
+            doc.fontSize(14).text(`Titulo ${tarea.marca}`);
+            doc.text(`Description ${tarea.modelo}`);
+            doc.text(`Estado ${tarea.precio}`);
+            doc.text(`Creado por ${tarea.colores}`);
+        });
 
 
+        // terminamos de maquetar
+        doc.on("end", () => {
+            const pdfBuffer = Buffer.concat(buffers);
+
+            res.setHeader("Content-type", "application/pdf");
+            res.status(200).send(pdfBuffer);
+        })
+
+        doc.end()
+    } catch (error) {
+        // Manejar errores si la operación falla
+        res.status(400).json({
+            status: "Error",
+            message: "Error el pdf no se a generado",
+            error: error.message,
+        });
+    }
+};
+
+const listaDeColoresDeUsuario = async (req, res) => {
+    try {
+        const colores = await Mobile.find();
+        if (colores.length === 0) {
+            res.status(204).json({ status: "success", message: "No hay tareas" })
+        }
+        const doc = new PDFDocument();
+        const buffers = [];
+        doc.on("data", (chunk) => buffers.push(chunk));
+        doc.fontSize(18).text("Listado de colores", { align: "center " });
+        doc.moveDown();
+
+        colores.forEach(tarea => {
+            doc.fontSize(14).text(`Lista de colores}`);
+
+            colores.forEach(element => {
+                
+            });
+            doc.text(`${tarea.colores}`);
+        });
+
+
+        // terminamos de maquetar
+        doc.on("end", () => {
+            const pdfBuffer = Buffer.concat(buffers);
+
+            res.setHeader("Content-type", "application/pdf");
+            res.status(200).send(pdfBuffer);
+        })
+
+        doc.end()
+    } catch (error) {
+        // Manejar errores si la operación falla
+        res.status(400).json({
+            status: "Error",
+            message: "Error el pdf no se a generado",
+            error: error.message,
+        });
+    }
+};
 
 
 
@@ -344,6 +424,8 @@ module.exports = {
     patch2Mobile,
     removeColor,
     getAverage,
-    sendCheapest
+    sendCheapest,
+    obtenerTareasDeUsuario,
+    listaDeColoresDeUsuario,
 
 };
